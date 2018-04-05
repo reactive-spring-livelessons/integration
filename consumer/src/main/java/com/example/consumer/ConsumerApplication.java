@@ -26,7 +26,7 @@ public class ConsumerApplication {
 
 		@EnableBinding(Sink.class)
 		public static class StreamListenerSink {
-				
+
 				@StreamListener
 				public void process(@Input(Sink.INPUT) Flux<String> messages) {
 						messages.subscribe(g -> log.info("new greeting: " + g));
