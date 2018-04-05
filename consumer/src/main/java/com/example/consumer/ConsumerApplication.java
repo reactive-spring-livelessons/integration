@@ -22,17 +22,19 @@ import java.time.Instant;
 
 @Log
 @SpringBootApplication
-@EnableBinding(Sink.class)
 public class ConsumerApplication {
 
-		@StreamListener
-		public void publisherStream(@Input(Sink.INPUT) Flux<String> messages) {
-				messages
-					.subscribe(g -> log.info("new greeting: " + g));
+		@EnableBinding(Sink.class)
+		public static class StreamListenerSink {
+				
+				@StreamListener
+				public void process(@Input(Sink.INPUT) Flux<String> messages) {
+						messages.subscribe(g -> log.info("new greeting: " + g));
+				}
 		}
 
 		@Bean
-		IntegrationFlow publisherPoweredFlow() {
+		IntegrationFlow flow() {
 
 				Flux<Greeting> delayElements = Flux
 					.<Greeting>generate(sink -> sink.next(new Greeting("Hello, world @" + Instant.now().toString() + "!")))
